@@ -31,18 +31,14 @@ t_list		*check_fd(t_list **used, int fd)
 
 void		snip(char *line, t_list *cur, char *buf)
 {
-	int i;
-	int j;
+	int		ret;
+	char	*tmp;
 
-	j = 0;
-	i = -1;
-	ft_strcpy(line, cur->content);
-	while (buf[++i] != '\n')
-		line[i + ft_strlen((char*)cur->content)] = buf[i];
-	ft_bzero(cur->content, ft_strlen(cur->content));
-	i++;
-	while (buf[i])
-		((char*)cur->content)[j++] = buf[i++];
+	while (ft_strchr(buf, '\n') == NULL && \
+	(ret = read(cur->content_size, buf, BUFF_SIZE)) > 0)
+	{
+
+	}
 }
 int			get_next_line(const int fd, char **line)
 {
@@ -53,8 +49,6 @@ int			get_next_line(const int fd, char **line)
 	if (!line || fd < 0 || !(buf = ft_strnew(BUFF_SIZE)))
 		return (-1);
 	cur = check_fd(&used, fd);
-	if (!read(cur->content_size, buf, BUFF_SIZE))
-		return (0);
 	snip(*line, cur, buf);
 	//while (!ft_strchr(buf, '\n') && read(curr->content_size, buf,  BUFF_SIZE);
 	//	ft_strcat(*line, buf);
