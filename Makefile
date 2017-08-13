@@ -4,14 +4,12 @@ HEADER = get_next_line.h
 
 LIB = libft
 
-CC = gcc
+CC = gcc -g
 
 CFLAGS = -Wall -Werror -Wextra
 .PHONY : clean fclean re all
 
 SRC = get_next_line.c main.c
-
-all : $(NAME)
 
 OBJ = *.o
 
@@ -26,7 +24,7 @@ clean:
 	/bin/rm -f $(OBJ)
 	make -C $(LIB) clean
 
-fclean:
+fclean: clean
 	/bin/rm -f $(NAME)
 	make -C $(LIB) fclean
 

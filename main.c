@@ -3,11 +3,25 @@
 int main(int ac, char **av)
 {
 	int fd;
-	char **line;
-	
+	char *line;
+
 	ac = 2;
-	line = (char**)malloc(sizeof(char*)*sizeof(char*));
+	line = (char*)malloc(sizeof(char)*500);
 	fd = open(av[1], O_RDONLY);
-	get_next_line(fd, line);
-	ft_putstr(line[0]);
+	
+	get_next_line(fd, &line);
+
+	printf("%s\n", line);
+	get_next_line(fd, &line);
+
+	printf("%s\n", line);
+
+			get_next_line(fd, &line);
+
+	printf("%s\n", line);
+	
+	get_next_line(fd, &line);
+
+	printf("%s\n", line);
+
 }
