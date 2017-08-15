@@ -6,7 +6,7 @@
 /*   By: rlevine <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/03 19:38:24 by rlevine           #+#    #+#             */
-/*   Updated: 2017/08/14 18:40:53 by rlevine          ###   ########.fr       */
+/*   Updated: 2017/08/14 19:36:30 by rlevine          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,14 @@ int		snip(char *line, t_list *cur, char *buf)
 {
 	int		ret;
 	int		i;
+	char	*tmp;
 
 	i = 0;
-	if (ft_strlen((char*)cur->content))
+	if (ft_strlen((char*)cur->content) && (tmp = (char*)cur->content) != NULL)
 	{
-		ft_strcpy(line, (char*)cur->content);
-		ft_strclr((char*)cur->content);
+		i = ft_strchr(tmp, '\n') - tmp;
+		ft_strncpy(line, (char*)cur->content, i);
+		ft_strclr(&((char*)cur->content)[i + 1]);
 	}
 	while ((ret = read(cur->content_size, buf, BUFF_SIZE)) > 0 && \
 			ft_strchr(buf, '\n') == NULL)
@@ -46,7 +48,6 @@ int		snip(char *line, t_list *cur, char *buf)
 	if (ret > 0 && (i = ft_strchr(buf, '\n') - buf) > 0)
 	{
 		ft_strncat(line, buf, i);
-		ft_strclr(cur->content);
 		ft_strcpy((char*)cur->content, &buf[i + 1]);
 	}
 	ft_strdel(&buf);
