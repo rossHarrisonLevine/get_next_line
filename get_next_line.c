@@ -6,7 +6,7 @@
 /*   By: rlevine <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/03 19:38:24 by rlevine           #+#    #+#             */
-/*   Updated: 2017/08/12 18:28:09 by rlevine          ###   ########.fr       */
+/*   Updated: 2017/08/14 18:40:53 by rlevine          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,29 +29,41 @@ t_list		*check_fd(t_list **used, int fd)
 	return(tmp);
 }
 
-void		snip(char *line, t_list *cur, char *buf)
+int		snip(char *line, t_list *cur, char *buf)
 {
 	int		ret;
-	char	*tmp;
+	int		i;
 
-	while (ft_strchr(buf, '\n') == NULL && \
-	(ret = read(cur->content_size, buf, BUFF_SIZE)) > 0)
+	i = 0;
+	if (ft_strlen((char*)cur->content))
 	{
-
+		ft_strcpy(line, (char*)cur->content);
+		ft_strclr((char*)cur->content);
 	}
+	while ((ret = read(cur->content_size, buf, BUFF_SIZE)) > 0 && \
+			ft_strchr(buf, '\n') == NULL)
+		ft_strcat(line, buf);
+	if (ret > 0 && (i = ft_strchr(buf, '\n') - buf) > 0)
+	{
+		ft_strncat(line, buf, i);
+		ft_strclr(cur->content);
+		ft_strcpy((char*)cur->content, &buf[i + 1]);
+	}
+	ft_strdel(&buf);
+	return (ret);
 }
 int			get_next_line(const int fd, char **line)
 {
 	static t_list	*used;
 	char			*buf;
 	t_list			*cur;
-//	int				ret;
+	int				ret;
+
 	if (!line || fd < 0 || !(buf = ft_strnew(BUFF_SIZE)))
 		return (-1);
 	cur = check_fd(&used, fd);
-	snip(*line, cur, buf);
-	//while (!ft_strchr(buf, '\n') && read(curr->content_size, buf,  BUFF_SIZE);
-	//	ft_strcat(*line, buf);
-	
-	return (1);
+	ret = snip(*line, cur, buf);
+	if (ret > 0)
+		return (1);
+	return (ret);
 }
