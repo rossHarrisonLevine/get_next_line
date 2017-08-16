@@ -6,7 +6,7 @@
 /*   By: rlevine <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/03 19:38:24 by rlevine           #+#    #+#             */
-/*   Updated: 2017/08/14 19:36:30 by rlevine          ###   ########.fr       */
+/*   Updated: 2017/08/15 20:29:31 by rlevine          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,42 +29,51 @@ t_list		*check_fd(t_list **used, int fd)
 	return(tmp);
 }
 
-int		snip(char *line, t_list *cur, char *buf)
+int		snip(t_list *cur, char **buf)
 {
 	int		ret;
-	int		i;
 	char	*tmp;
 
-	i = 0;
-	if (ft_strlen((char*)cur->content) && (tmp = (char*)cur->content) != NULL)
-	{
-		i = ft_strchr(tmp, '\n') - tmp;
-		ft_strncpy(line, (char*)cur->content, i);
-		ft_strclr(&((char*)cur->content)[i + 1]);
-	}
-	while ((ret = read(cur->content_size, buf, BUFF_SIZE)) > 0 && \
-			ft_strchr(buf, '\n') == NULL)
-		ft_strcat(line, buf);
-	if (ret > 0 && (i = ft_strchr(buf, '\n') - buf) > 0)
-	{
-		ft_strncat(line, buf, i);
-		ft_strcpy((char*)cur->content, &buf[i + 1]);
-	}
-	ft_strdel(&buf);
-	return (ret);
+	if(!(*buf))
+		return (-1);
+	while ((ft_strchr(*buf, '\n') == NULL && \
+				(ret = read(cur->content_size, *buf, BUFF_SIZE)) > 0))
+		{
+			tmp = cur->content;
+			cur->content = ft_strjoin(tmp, *buf);
+			ft_strdel(&tmp);
+		}
+		ft_strdel(&(*buf));
+		if (ret == -1)
+			return (-1);
+		return (1);
 }
+
 int			get_next_line(const int fd, char **line)
 {
 	static t_list	*used;
 	char			*buf;
 	t_list			*cur;
-	int				ret;
+	char			*tmp;
 
-	if (!line || fd < 0 || !(buf = ft_strnew(BUFF_SIZE)))
+	if (!line || fd < 0 || !(buf = ft_strnew(BUFF_SIZE)) || BUFF_SIZE < 0)
 		return (-1);
 	cur = check_fd(&used, fd);
-	ret = snip(*line, cur, buf);
-	if (ret > 0)
-		return (1);
-	return (ret);
+	if (snip(cur, &buf) == -1)
+		return (-1);
+	if (!cur->content)
+		return (0);
+	ft_strclr(buf);
+	buf = ft_strnew(ft_strlen(cur->content));
+	if ((buf = ft_strchr((char*)cur->content, '\n')) != NULL)
+	{
+		*line = ft_strsub(cur->content, 0, buf - (char*)cur->content);
+		tmp = cur->content;
+		cur->content = ft_strdup(buf + 1);
+		ft_strdel(&tmp);
+		return(1);
+	}
+	*line = ft_strdup(cur->content);
+	cur->content = NULL;
+	return (ft_strlen(*line) > 0 ? 1 : 0);
 }

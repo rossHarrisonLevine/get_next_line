@@ -6,7 +6,7 @@
 #    By: rlevine <rlevine@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/03 15:21:19 by rlevine           #+#    #+#              #
-#    Updated: 2017/07/02 16:44:07 by rlevine          ###   ########.fr        #
+#    Updated: 2017/08/15 20:00:29 by rlevine          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,7 +69,7 @@
 
 NAME = libft.a
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -c
+CFLAGS = -Wall -Werror -Wextra -c -g
 .PHONY = all clean fclean re
 
 SRC = 	ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c \

@@ -4,9 +4,9 @@ HEADER = get_next_line.h
 
 LIB = libft
 
-CC = gcc -g
+CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 .PHONY : clean fclean re all
 
 SRC = get_next_line.c main.c
